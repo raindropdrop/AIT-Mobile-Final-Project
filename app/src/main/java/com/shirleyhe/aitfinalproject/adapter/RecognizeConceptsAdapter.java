@@ -5,6 +5,7 @@ package com.shirleyhe.aitfinalproject.adapter;
  */
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,10 @@ public class RecognizeConceptsAdapter extends RecyclerView.Adapter<RecognizeConc
         final Concept concept = concepts.get(position);
         holder.label.setText(concept.name() != null ? concept.name() : concept.id());
         holder.probability.setText(String.valueOf(concept.value()));
+
+        Log.d("conceptzz", concept.name().toString());
+
+
     }
 
     @Override public int getItemCount() {

@@ -10,8 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
@@ -26,7 +28,9 @@ import clarifai2.dto.prediction.Concept;
 
 import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
+import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
 import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
+//import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
@@ -38,6 +42,7 @@ import static android.view.View.VISIBLE;
 public final class RecognizeConceptsActivity extends BaseActivity {
 
     public static final int PICK_IMAGE = 100;
+    public String passKeyWord;
 
     // the list of results that were returned from the API
     @BindView(R.id.resultsList) RecyclerView resultsList;
@@ -126,8 +131,14 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     showErrorSnackbar(R.string.no_results_from_api);
                     return;
                 }
+
                 adapter.setData(predictions.get(0).data());
-                imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+
+
+
+                passKeyWord = predictions.get(0).data().get(2).name();
+
+                //imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
             }
 
             private void showErrorSnackbar(@StringRes int errorString) {
@@ -138,6 +149,15 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                 ).show();
             }
         }.execute();
+
+        //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! do the view pager here
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
+    }
+
+    //pass keywordstring to itemdetailsfragment
+    public String getPassKeyWord() {
+        return passKeyWord;
     }
 
 
