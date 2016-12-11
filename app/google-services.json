@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "916766735994",
+    "firebase_url": "https://aitmobilefinal.firebaseio.com",
+    "project_id": "aitmobilefinal",
+    "storage_bucket": "aitmobilefinal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916766735994:android:13b398d796d0ace2",
+        "android_client_info": {
+          "package_name": "com.shirleyhe.aitfinalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916766735994-efo6ljcn5cnd7joq0hbmtiuotoguhac1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shirleyhe.aitfinalproject",
+            "certificate_hash": "A0185D6089413D10F265C20AA129FEBB3B84FC25"
+          }
+        },
+        {
+          "client_id": "916766735994-qidoaj18d8vpud15bd5slhos19lf309r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS9SjvcunWd2v0Q8Sjyv8R-H9fBFVLiGA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916766735994-qidoaj18d8vpud15bd5slhos19lf309r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
