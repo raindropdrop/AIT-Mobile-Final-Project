@@ -11,4 +11,7 @@
 
     <string name="upload_image_hint">Click the button in the bottom-right corner to upload an image!</string>
 
+    <string name="facebook_app_id">335298970187728</string>
+    <string name="fb_login_protocol_scheme">fb335298970187728</string>
+
 </resources>
