@@ -37,6 +37,8 @@ public class RecognizeConceptsAdapter extends RecyclerView.Adapter<RecognizeConc
         final Concept concept = concepts.get(position);
         holder.label.setText(concept.name() != null ? concept.name() : concept.id());
         holder.probability.setText(String.valueOf(concept.value()));
+
+
     }
 
     @Override public int getItemCount() {

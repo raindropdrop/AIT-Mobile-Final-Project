@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -26,7 +27,8 @@ import clarifai2.dto.prediction.Concept;
 
 import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
-import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
+import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
+//import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
@@ -51,7 +53,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
     // the FAB that the user clicks to select an image
     @BindView(R.id.fab) View fab;
 
-    @NonNull private final RecognizeConceptsAdapter adapter = new RecognizeConceptsAdapter();
+    //@NonNull private final RecognizeConceptsAdapter adapter = new RecognizeConceptsAdapter();
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         super.onStart();
 
         resultsList.setLayoutManager(new LinearLayoutManager(this));
-        resultsList.setAdapter(adapter);
+        //resultsList.setAdapter(adapter);
     }
 
     @OnClick(R.id.fab)
@@ -102,7 +104,11 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         setBusy(true);
 
         // Make sure we don't show a list of old concepts while the image is being uploaded
-        adapter.setData(Collections.<Concept>emptyList());
+        //adapter.setData(Collections.<Concept>emptyList());
+
+        //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! do the view pager here
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
 
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
             @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
@@ -126,8 +132,9 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     showErrorSnackbar(R.string.no_results_from_api);
                     return;
                 }
-                adapter.setData(predictions.get(0).data());
-                imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                //TOOK OUT
+                //adapter.setData(predictions.get(0).data());
+                //imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
             }
 
             private void showErrorSnackbar(@StringRes int errorString) {
