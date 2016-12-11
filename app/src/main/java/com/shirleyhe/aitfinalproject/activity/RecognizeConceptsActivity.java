@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
@@ -28,6 +29,7 @@ import clarifai2.dto.prediction.Concept;
 import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
 import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
+import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 //import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +42,7 @@ import static android.view.View.VISIBLE;
 public final class RecognizeConceptsActivity extends BaseActivity {
 
     public static final int PICK_IMAGE = 100;
+    public String passKeyWord;
 
     // the list of results that were returned from the API
     @BindView(R.id.resultsList) RecyclerView resultsList;
@@ -53,7 +56,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
     // the FAB that the user clicks to select an image
     @BindView(R.id.fab) View fab;
 
-    //@NonNull private final RecognizeConceptsAdapter adapter = new RecognizeConceptsAdapter();
+    @NonNull private final RecognizeConceptsAdapter adapter = new RecognizeConceptsAdapter();
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +67,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         super.onStart();
 
         resultsList.setLayoutManager(new LinearLayoutManager(this));
-        //resultsList.setAdapter(adapter);
+        resultsList.setAdapter(adapter);
     }
 
     @OnClick(R.id.fab)
@@ -104,11 +107,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         setBusy(true);
 
         // Make sure we don't show a list of old concepts while the image is being uploaded
-        //adapter.setData(Collections.<Concept>emptyList());
-
-        //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! do the view pager here
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
+        adapter.setData(Collections.<Concept>emptyList());
 
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
             @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
@@ -132,8 +131,13 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     showErrorSnackbar(R.string.no_results_from_api);
                     return;
                 }
-                //TOOK OUT
-                //adapter.setData(predictions.get(0).data());
+
+                adapter.setData(predictions.get(0).data());
+
+
+
+                passKeyWord = predictions.get(0).data().get(2).name();
+
                 //imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
             }
 
@@ -145,6 +149,15 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                 ).show();
             }
         }.execute();
+
+        //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! do the view pager here
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
+    }
+
+    //pass keywordstring to itemdetailsfragment
+    public String getPassKeyWord() {
+        return passKeyWord;
     }
 
 
