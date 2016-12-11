@@ -28,8 +28,11 @@ import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
 import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
 
+import com.shirleyhe.aitfinalproject.fragment.ItemDetailsFragment;
+//import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +42,10 @@ import static android.view.View.VISIBLE;
 public final class RecognizeConceptsActivity extends BaseActivity {
 
     public static final int PICK_IMAGE = 100;
-    public String passKeyWord;
+    private ArrayList<String> tags = new ArrayList<>();
+
+
+    private String passKeyWord = "";
 
     // the list of results that were returned from the API
     @BindView(R.id.resultsList) RecyclerView resultsList;
@@ -55,6 +61,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -127,9 +134,26 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     return;
                 }
 
-//                adapter.setData(predictions.get(0).data());
-                passKeyWord = predictions.get(0).data().get(2).name();
-                //imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                //GETTIN TAGS HERE INSTEAD
+                final List<Concept> predictedTags = predictions.get(0).data();
+                for (int i = 0; i < predictedTags.size(); i++) {
+                    tags.add(predictedTags.get(i).name());
+
+                }
+                passKeyWord = tags.get(0);
+
+                String a = passKeyWord;
+
+                //making new bundle to pass passkeyword instead
+//                Bundle bundle = new Bundle();
+//                bundle.putString("passKeyWord", passKeyWord);
+//
+//                ItemDetailsFragment itemDetailsFragment = new ItemDetailsFragment();
+//                itemDetailsFragment.setArguments(bundle);
+
+
+                //passKeyWord = predictedTags.get(0).name();
+               // adapter.setData(predictions.get(0).data());
             }
 
             private void showErrorSnackbar(@StringRes int errorString) {
