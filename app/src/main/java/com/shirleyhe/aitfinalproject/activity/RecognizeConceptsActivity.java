@@ -30,6 +30,7 @@ import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
 import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
 import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
+import com.shirleyhe.aitfinalproject.fragment.ItemDetailsFragment;
 //import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
 import java.io.ByteArrayOutputStream;
@@ -44,7 +45,9 @@ public final class RecognizeConceptsActivity extends BaseActivity {
 
     public static final int PICK_IMAGE = 100;
     private ArrayList<String> tags = new ArrayList<>();
-    public String passKeyWord;
+
+
+    private String passKeyWord = "";
 
     // the list of results that were returned from the API
     @BindView(R.id.resultsList) RecyclerView resultsList;
@@ -62,6 +65,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -140,7 +144,18 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     tags.add(predictedTags.get(i).name());
 
                 }
-                passKeyWord = tags.get(1);
+                passKeyWord = tags.get(0);
+
+                String a = passKeyWord;
+
+                //making new bundle to pass passkeyword instead
+//                Bundle bundle = new Bundle();
+//                bundle.putString("passKeyWord", passKeyWord);
+//
+//                ItemDetailsFragment itemDetailsFragment = new ItemDetailsFragment();
+//                itemDetailsFragment.setArguments(bundle);
+
+
                 //passKeyWord = predictedTags.get(0).name();
                // adapter.setData(predictions.get(0).data());
 
