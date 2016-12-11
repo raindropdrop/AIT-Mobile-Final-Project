@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">AITFinalProject</string>
+    <string name="clarifai_id">Sy-izDHkYcYbeqFccMPyN84RBxK69nEOADX1fatu</string>
+    <string name="clarifai_secret">gtg0yK4-TyPFDSQurO-Va3pxw4r5Oh6Jz7SPyBOR</string>
+
+    <string name="app_name">AIT Final Project</string>
+
+    <string name="error_external_storage_permission_not_granted">You must accept this permission so we can upload your images!</string>
+
+    <string name="error_while_contacting_api">Error while contacting Clarifai API</string>
+    <string name="no_results_from_api">API did not return any results</string>
+
+    <string name="upload_image_hint">Click the button in the bottom-right corner to upload an image!</string>
+
 </resources>
