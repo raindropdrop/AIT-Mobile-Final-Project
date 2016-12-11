@@ -35,8 +35,8 @@ public class ItemDetailsFragment extends Fragment {
         RecognizeConceptsActivity recognizeConceptsActivity = (RecognizeConceptsActivity) getActivity();
         String passKeyWord = recognizeConceptsActivity.getPassKeyWord();
 
-        String url = "http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0";
-        //String url = "https://www.google.hu/?gws_rd=cr,ssl&ei=aKNNWO7oNMWfsgHU5qOADQ#q="+passKeyWord;
+        //String url = "http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0";
+        String url = "https://www.google.hu/?gws_rd=cr,ssl&ei=aKNNWO7oNMWfsgHU5qOADQ#q="+passKeyWord;
         Log.d("passKeyWord", passKeyWord+"yes");
 
         webView.getSettings().setLoadsImagesAutomatically(true);

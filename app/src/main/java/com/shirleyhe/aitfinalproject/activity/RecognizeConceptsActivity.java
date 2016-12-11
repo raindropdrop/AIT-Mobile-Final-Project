@@ -33,6 +33,7 @@ import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 //import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import static android.view.View.VISIBLE;
 public final class RecognizeConceptsActivity extends BaseActivity {
 
     public static final int PICK_IMAGE = 100;
+    private ArrayList<String> tags = new ArrayList<>();
     public String passKeyWord;
 
     // the list of results that were returned from the API
@@ -132,13 +134,16 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     return;
                 }
 
-                adapter.setData(predictions.get(0).data());
+                //GETTIN TAGS HERE INSTEAD
+                final List<Concept> predictedTags = predictions.get(0).data();
+                for (int i = 0; i < predictedTags.size(); i++) {
+                    tags.add(predictedTags.get(i).name());
 
+                }
+                passKeyWord = tags.get(1);
+                //passKeyWord = predictedTags.get(0).name();
+               // adapter.setData(predictions.get(0).data());
 
-
-                passKeyWord = predictions.get(0).data().get(2).name();
-
-                //imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
             }
 
             private void showErrorSnackbar(@StringRes int errorString) {
