@@ -59,4 +59,9 @@ public class ItemDetailsFragment extends Fragment {
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.loadUrl(url);
     }
+
+
+    public void navigateToStringUrl(String url) {
+        webView.loadUrl(url);
+    }
 }

@@ -146,18 +146,12 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                 }
                 passKeyWord = tags.get(0);
 
-                String a = passKeyWord;
+                ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
 
-                //making new bundle to pass passkeyword instead
-//                Bundle bundle = new Bundle();
-//                bundle.putString("passKeyWord", passKeyWord);
-//
-//                ItemDetailsFragment itemDetailsFragment = new ItemDetailsFragment();
-//                itemDetailsFragment.setArguments(bundle);
+        findItemDetailsFragment().navigateToStringUrl
+                ("http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0");
 
-
-                //passKeyWord = predictedTags.get(0).name();
-               // adapter.setData(predictions.get(0).data());
 
             }
 
@@ -170,9 +164,20 @@ public final class RecognizeConceptsActivity extends BaseActivity {
             }
         }.execute();
 
-        //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! do the view pager here
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
+        //do the view pager here
+//        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+//        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
+//
+//        findItemDetailsFragment().navigateToStringUrl
+//                ("http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0");
+
+
+    }
+
+    //find ItemDetailsFragment from Activity
+    private ItemDetailsFragment findItemDetailsFragment() {
+        return (ItemDetailsFragment) getSupportFragmentManager()
+                .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0);
     }
 
     //pass keywordstring to itemdetailsfragment
