@@ -2,7 +2,6 @@ package com.shirleyhe.aitfinalproject.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
@@ -29,7 +27,7 @@ import clarifai2.dto.prediction.Concept;
 import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
 import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
-import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
+
 import com.shirleyhe.aitfinalproject.fragment.ItemDetailsFragment;
 //import com.shirleyhe.aitfinalproject.adapter.RecognizeConceptsAdapter;
 
@@ -61,8 +59,6 @@ public final class RecognizeConceptsActivity extends BaseActivity {
     // the FAB that the user clicks to select an image
     @BindView(R.id.fab) View fab;
 
-    @NonNull private final RecognizeConceptsAdapter adapter = new RecognizeConceptsAdapter();
-
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -73,7 +69,7 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         super.onStart();
 
         resultsList.setLayoutManager(new LinearLayoutManager(this));
-        resultsList.setAdapter(adapter);
+//        resultsList.setAdapter(adapter);
     }
 
     @OnClick(R.id.fab)
@@ -112,8 +108,8 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         // Now we will upload our image to the Clarifai API
         setBusy(true);
 
-        // Make sure we don't show a list of old concepts while the image is being uploaded
-        adapter.setData(Collections.<Concept>emptyList());
+//        // Make sure we don't show a list of old concepts while the image is being uploaded
+//        adapter.setData(Collections.<Concept>emptyList());
 
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
             @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
@@ -152,6 +148,9 @@ public final class RecognizeConceptsActivity extends BaseActivity {
         findItemDetailsFragment().navigateToStringUrl
                 ("http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0");
 
+
+                //passKeyWord = predictedTags.get(0).name();
+               // adapter.setData(predictions.get(0).data());
 
             }
 
