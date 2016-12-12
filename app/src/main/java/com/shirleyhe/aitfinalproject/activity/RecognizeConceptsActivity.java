@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -73,7 +74,8 @@ public final class RecognizeConceptsActivity extends AppCompatActivity {
     @BindView(R.id.btnLogout)
     Button btnLogout;
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognize);
 
@@ -153,22 +155,23 @@ public final class RecognizeConceptsActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnLogout)
-    void userLogout(){
+    void userLogout() {
         FirebaseAuth.getInstance().signOut();
     }
 
 
     @OnClick(R.id.fab)
     public void pickImage() {
-        Toast.makeText(RecognizeConceptsActivity.this, "fab pressed", Toast.LENGTH_LONG).show();
+//        Toast.makeText(RecognizeConceptsActivity.this, "fab pressed", Toast.LENGTH_LONG).show();
         startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), PICK_IMAGE);
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
-        switch(requestCode) {
+        switch (requestCode) {
             case PICK_IMAGE:
                 //original
                 //final byte[] imageBytes = ClarifaiUtil.retrieveSelectedImage(this, data);
@@ -196,7 +199,8 @@ public final class RecognizeConceptsActivity extends AppCompatActivity {
 //        adapter.setData(Collections.<Concept>emptyList());
 
         new AsyncTask<Void, Void, ClarifaiResponse<List<ClarifaiOutput<Concept>>>>() {
-            @Override protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
+            @Override
+            protected ClarifaiResponse<List<ClarifaiOutput<Concept>>> doInBackground(Void... params) {
                 // The default Clarifai model that identifies concepts in images
                 final ConceptModel generalModel = App.get().clarifaiClient().getDefaultModels().generalModel();
 
@@ -206,7 +210,8 @@ public final class RecognizeConceptsActivity extends AppCompatActivity {
                         .executeSync();
             }
 
-            @Override protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> response) {
+            @Override
+            protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> response) {
                 if (!response.isSuccessful()) {
                     showErrorSnackbar(R.string.error_while_contacting_api);
                     return;
@@ -225,22 +230,18 @@ public final class RecognizeConceptsActivity extends AppCompatActivity {
                 }
                 passKeyWord = tags.get(0);
 
-                String a = passKeyWord;
+                ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+                viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
 
                 viewPager.setCurrentItem(1);
 
-
-
-                //making new bundle to pass passkeyword instead
-//                Bundle bundle = new Bundle();
-//                bundle.putString("passKeyWord", passKeyWord);
-//
-//                ItemDetailsFragment itemDetailsFragment = new ItemDetailsFragment();
-//                itemDetailsFragment.setArguments(bundle);
+                findItemDetailsFragment().navigateToStringUrl
+                        ("http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X" + passKeyWord + ".TRS0&_nkw=" + passKeyWord + "&_sacat=0");
 
 
                 //passKeyWord = predictedTags.get(0).name();
-               // adapter.setData(predictions.get(0).data());
+                // adapter.setData(predictions.get(0).data());
+
             }
 
             private void showErrorSnackbar(@StringRes int errorString) {
@@ -251,14 +252,18 @@ public final class RecognizeConceptsActivity extends AppCompatActivity {
                 ).show();
             }
         }.execute();
+    }
 
+    //find ItemDetailsFragment from Activity
+    private ItemDetailsFragment findItemDetailsFragment() {
+        return (ItemDetailsFragment) getSupportFragmentManager()
+                .findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0);
     }
 
     //pass keywordstring to itemdetailsfragment
     public String getPassKeyWord() {
         return passKeyWord;
     }
-
 
 
 }

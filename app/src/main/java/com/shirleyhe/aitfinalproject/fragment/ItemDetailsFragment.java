@@ -39,12 +39,6 @@ public class ItemDetailsFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setWebView(((RecognizeConceptsActivity) getActivity()).getPassKeyWord());
-    }
-
     private void setWebView(String passKeyWord){
         String url = "http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0";
         //String url = "https://www.google.com/search?q="+passKeyWord;
@@ -55,6 +49,11 @@ public class ItemDetailsFragment extends Fragment {
         //webView.getSettings().setBuiltInZoomControls(true);
         webView.setWebViewClient(new WebViewClient());
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webView.loadUrl(url);
+    }
+
+
+    public void navigateToStringUrl(String url) {
         webView.loadUrl(url);
     }
 }
