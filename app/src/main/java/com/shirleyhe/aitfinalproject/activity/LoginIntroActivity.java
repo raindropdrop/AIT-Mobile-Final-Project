@@ -145,6 +145,22 @@ public class LoginIntroActivity extends AppCompatActivity{
         displayLoginEmail();
     }
 
+    @OnClick(R.id.tvLoginGuest)
+    void loginGuestClick(){
+        Intent intentList = new Intent();
+        intentList.setClass(this, RecognizeConceptsActivity.class);
+
+        startActivityForResult(intentList, 101);
+    }
+
+
+    private void goMain() {
+        Intent intentList = new Intent();
+        intentList.setClass(this, RecognizeConceptsActivity.class);
+
+        startActivityForResult(intentList, 101);
+    }
+
 
     private void displayLoginEmail() {
         Intent intentList = new Intent();
@@ -171,14 +187,6 @@ public class LoginIntroActivity extends AppCompatActivity{
                         // ...
                     }
                 });
-    }
-
-    @OnClick(R.id.tvLoginGuest)
-    void loginGuestClick(){
-        Intent intentList = new Intent();
-        intentList.setClass(this, RecognizeConceptsActivity.class);
-
-        startActivityForResult(intentList, 101);
     }
 
 }

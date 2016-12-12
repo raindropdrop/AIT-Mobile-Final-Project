@@ -31,7 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.etPassword)
     EditText etPassword;
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
 
@@ -42,14 +43,14 @@ public class LoginActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        mAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-//                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Intent goMain = new Intent(LoginActivity.this, RecognizeConceptsActivity.class);
+                    startActivity(goMain);
                 } else {
                     // User is signed out
 //                    Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -62,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnLogin)
     void loginClick(){
-        goMain();
+        signIn(etEmail.getText().toString(), etPassword.getText().toString());
     }
 
 
@@ -90,30 +91,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void goMain() {
-        Intent intentList = new Intent();
-        intentList.setClass(this, RecognizeConceptsActivity.class);
-
-        startActivityForResult(intentList, 101);
-    }
+//    private void goMain() {
+//        Intent intentList = new Intent();
+//        intentList.setClass(this, RecognizeConceptsActivity.class);
+//
+//        startActivityForResult(intentList, 101);
+//    }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+            mFirebaseAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
 
     private void createAccount(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mFirebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -134,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
+        mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

@@ -8,14 +8,28 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import clarifai2.api.ClarifaiResponse;
 import clarifai2.dto.input.ClarifaiInput;
@@ -24,6 +38,7 @@ import clarifai2.dto.model.ConceptModel;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.shirleyhe.aitfinalproject.App;
 import com.shirleyhe.aitfinalproject.R;
 import com.shirleyhe.aitfinalproject.adapter.EbayPagerAdapter;
@@ -39,43 +54,113 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public final class RecognizeConceptsActivity extends BaseActivity {
+public final class RecognizeConceptsActivity extends AppCompatActivity {
 
     public static final int PICK_IMAGE = 100;
     private ArrayList<String> tags = new ArrayList<>();
 
-
     private String passKeyWord = "";
 
-    // the list of results that were returned from the API
-    @BindView(R.id.resultsList) RecyclerView resultsList;
+    private ViewPager viewPager;
 
-    // the view where the image the user selected is displayed
-    @BindView(R.id.image) ImageView imageView;
+    private CoordinatorLayout layoutContent;
+    private DrawerLayout drawerLayout;
 
-    // switches between the text prompting the user to hit the FAB, and the loading spinner
-    @BindView(R.id.switcher) ViewSwitcher switcher;
 
-    // the FAB that the user clicks to select an image
-    @BindView(R.id.fab) View fab;
+    @BindView(R.id.framelayout)
+    FrameLayout frameLayout;
+
+    @BindView(R.id.btnLogout)
+    Button btnLogout;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recognize);
+
+        ButterKnife.bind(this);
+
+        layoutContent = (CoordinatorLayout) findViewById(
+                R.id.layoutContent);
+
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        switch (menuItem.getItemId()) {
+                            case R.id.action_profile:
+                                //Let user edit their profile
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                break;
+                            case R.id.action_about:
+                                showSnackBarMessage(getString(R.string.txt_about));
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                break;
+                            case R.id.action_help:
+                                showSnackBarMessage(getString(R.string.txt_help));
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                break;
+                        }
+
+                        return false;
+                    }
+                });
+
+        setUpToolBar();
+
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
 
 
     }
 
-    @Override protected void onStart() {
-        super.onStart();
+    private void setUpToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        resultsList.setLayoutManager(new LinearLayoutManager(this));
-//        resultsList.setAdapter(adapter);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    private void showSnackBarMessage(String message) {
+        Snackbar.make(layoutContent,
+                message,
+                Snackbar.LENGTH_LONG
+        ).setAction(R.string.action_hide, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //...
+            }
+        }).show();
+    }
+
+    @OnClick(R.id.btnLogout)
+    void userLogout(){
+        FirebaseAuth.getInstance().signOut();
+    }
+
 
     @OnClick(R.id.fab)
-    void pickImage() {
-        //original
-        //startActivityForResult(new Intent(Intent.ACTION_PICK).setType("image/*"), PICK_IMAGE);
+    public void pickImage() {
+        Toast.makeText(RecognizeConceptsActivity.this, "fab pressed", Toast.LENGTH_LONG).show();
         startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), PICK_IMAGE);
     }
 
@@ -101,12 +186,11 @@ public final class RecognizeConceptsActivity extends BaseActivity {
                     onImagePicked(imageBytes);
                 }
                 break;
+
         }
     }
 
     private void onImagePicked(@NonNull final byte[] imageBytes) {
-        // Now we will upload our image to the Clarifai API
-        setBusy(true);
 
 //        // Make sure we don't show a list of old concepts while the image is being uploaded
 //        adapter.setData(Collections.<Concept>emptyList());
@@ -123,7 +207,6 @@ public final class RecognizeConceptsActivity extends BaseActivity {
             }
 
             @Override protected void onPostExecute(ClarifaiResponse<List<ClarifaiOutput<Concept>>> response) {
-                setBusy(false);
                 if (!response.isSuccessful()) {
                     showErrorSnackbar(R.string.error_while_contacting_api);
                     return;
@@ -144,6 +227,10 @@ public final class RecognizeConceptsActivity extends BaseActivity {
 
                 String a = passKeyWord;
 
+                viewPager.setCurrentItem(1);
+
+
+
                 //making new bundle to pass passkeyword instead
 //                Bundle bundle = new Bundle();
 //                bundle.putString("passKeyWord", passKeyWord);
@@ -158,16 +245,13 @@ public final class RecognizeConceptsActivity extends BaseActivity {
 
             private void showErrorSnackbar(@StringRes int errorString) {
                 Snackbar.make(
-                        root,
+                        frameLayout,
                         errorString,
                         Snackbar.LENGTH_INDEFINITE
                 ).show();
             }
         }.execute();
 
-        //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! do the view pager here
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(new EbayPagerAdapter(getSupportFragmentManager()));
     }
 
     //pass keywordstring to itemdetailsfragment
@@ -176,16 +260,5 @@ public final class RecognizeConceptsActivity extends BaseActivity {
     }
 
 
-    @Override protected int layoutRes() { return R.layout.activity_recognize; }
-
-    private void setBusy(final boolean busy) {
-        runOnUiThread(new Runnable() {
-            @Override public void run() {
-                switcher.setDisplayedChild(busy ? 1 : 0);
-                imageView.setVisibility(busy ? GONE : VISIBLE);
-                fab.setEnabled(!busy);
-            }
-        });
-    }
 
 }

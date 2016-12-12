@@ -1,5 +1,6 @@
 package com.shirleyhe.aitfinalproject.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,6 @@ import com.shirleyhe.aitfinalproject.activity.RecognizeConceptsActivity;
 public class ItemDetailsFragment extends Fragment {
 
     WebView webView;
-    String passKeyWord = "";
 
     @Nullable
     @Override
@@ -30,26 +30,24 @@ public class ItemDetailsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.item_details_fragment, null);
 
         webView = (WebView) rootView.findViewById(R.id.webView);
-        //webView.setWebViewClient(new WebBrowser());
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 
-        //getting passkeyword from recognizeconceptsactivity
-        RecognizeConceptsActivity recognizeConceptsActivity = (RecognizeConceptsActivity) getActivity();
-        passKeyWord = recognizeConceptsActivity.getPassKeyWord();
-
-        //GET FROM BUNDLE
-        //String passKeyWordBundle = getArguments().getString("passKeyWord");
-
-
+        setWebView("");
 
         return rootView;
+
+
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        setWebView(((RecognizeConceptsActivity) getActivity()).getPassKeyWord());
+    }
 
-        //String url = "http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0";
-        String url = "https://www.google.com/search?q="+passKeyWord;
+    private void setWebView(String passKeyWord){
+        String url = "http://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313.TR0.TRC0.H0.X"+passKeyWord+".TRS0&_nkw="+passKeyWord+"&_sacat=0";
+        //String url = "https://www.google.com/search?q="+passKeyWord;
         //Log.d("passKeyWord", passKeyWord+"yes");
 
         webView.getSettings().setLoadsImagesAutomatically(true);

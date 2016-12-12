@@ -14,4 +14,9 @@
     <string name="facebook_app_id">335298970187728</string>
     <string name="fb_login_protocol_scheme">fb335298970187728</string>
 
+    <string name="txt_about">This app was made for AIT Mobile Course!</string>
+    <string name="txt_help">Use the touch controls to work with the application.</string>
+
+    <string name="action_hide">Hide</string>
+
 </resources>

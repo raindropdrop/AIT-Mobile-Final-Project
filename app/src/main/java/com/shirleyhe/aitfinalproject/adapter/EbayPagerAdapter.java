@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.shirleyhe.aitfinalproject.fragment.ItemDetailsFragment;
+import com.shirleyhe.aitfinalproject.fragment.ScanFragment;
 import com.shirleyhe.aitfinalproject.fragment.SearchHistoryFragment;
 
 /**
@@ -19,30 +20,41 @@ public class EbayPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Fragment fragment = null;
         switch (position) {
             case 0:
-                return new ItemDetailsFragment();
+                fragment =  new ScanFragment();
+                break;
             case 1:
-                return new SearchHistoryFragment();
+                fragment =  new ItemDetailsFragment();
+                break;
+            case 2:
+                fragment =  new SearchHistoryFragment();
+                break;
             default:
-                return new ItemDetailsFragment();
+                fragment = new ScanFragment();
+                break;
         }
+
+        return fragment;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "ItemDetails";
+                return "Scan";
             case 1:
+                return "ItemDetails";
+            case 2:
                 return "Search";
             default:
-                return "ItemDetails";
+                return "Scan";
         }
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
